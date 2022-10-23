@@ -25,4 +25,4 @@ pnpm-debug.log*
 db-data
 db.data
 
-.exe
+*.exe
