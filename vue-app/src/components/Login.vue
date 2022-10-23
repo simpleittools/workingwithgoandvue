@@ -63,7 +63,7 @@ export default {
               console.log("Error:", data.message)
             } else {
               // something else
-              console.log(data)
+              console.log("Token:", data.data.token.token)
             }
           })
     }
