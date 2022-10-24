@@ -12,7 +12,7 @@
           </li>
           <li class="nav-item">
             <router-link v-if="store.token === ''" class="nav-link" :to="{name: 'Login'}">Login</router-link>
-            <router-link v-else class="nav-link" :to="{name: 'Login'}">Logout</router-link>
+            <span v-else class="nav-link" id="logout" @click="logout">Logout</span>
           </li>
         </ul>
       </div>
@@ -22,16 +22,25 @@
 
 <script>
 import { store } from "@/components/store";
+import router from "@/router";
 export default {
   name: "HeaderComponent",
   data() {
     return {
       store
     }
+  },
+  methods: {
+    logout() {
+      store.token = "";
+      router.push({name: 'Login'})
+    }
   }
 }
 </script>
 
 <style scoped>
-
+ #logout {
+   cursor: pointer;
+ }
 </style>
