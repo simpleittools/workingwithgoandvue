@@ -11,8 +11,8 @@
             <router-link class="nav-link active" aria-current="page" :to="{ name: 'Home' }">Home</router-link>
           </li>
           <li class="nav-item">
-            <router-link v-if="store.token == ''" class="nav-link" :to="{name: 'Login'}">Login</router-link>
-            <router-link v-else class="nav-link" :to="{name: 'Login'}">Log Out</router-link>
+            <router-link v-if="store.token === ''" class="nav-link" :to="{name: 'Login'}">Login</router-link>
+            <router-link v-else class="nav-link" :to="{name: 'Login'}">Logout</router-link>
           </li>
         </ul>
       </div>

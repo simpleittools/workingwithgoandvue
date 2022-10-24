@@ -32,6 +32,9 @@
 import FormTag from "@/components/forms/FormTag";
 import TextInput from "@/components/forms/TextInput";
 import { store } from "@/components/store"
+import router from "@/router";
+import notie from 'notie';
+
 export default {
   name: "Login",
   components: {
@@ -61,12 +64,16 @@ export default {
           .then((response) => response.json())
           .then((response) => {
             if (response.error) {
-              // something went wrong
               console.log("Error:", response.message)
+              notie.alert({
+                type: 'error',
+                text: response.message
+              })
             } else {
               // something else
               console.log("Token:", response.data.token.token)
               store.token = response.data.token.token
+              router.push({name: 'Home'})
             }
           })
     }
