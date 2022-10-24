@@ -31,6 +31,7 @@
 <script>
 import FormTag from "@/components/forms/FormTag";
 import TextInput from "@/components/forms/TextInput";
+import { store } from "@/components/store"
 export default {
   name: "Login",
   components: {
@@ -40,7 +41,8 @@ export default {
   data() {
     return {
       email: "",
-      password: ""
+      password: "",
+      store,
     }
   },
   methods:{
@@ -57,13 +59,14 @@ export default {
 
       fetch("http://localhost:8081/users/login", requestOptions)
           .then((response) => response.json())
-          .then((data) => {
-            if (data.error) {
+          .then((response) => {
+            if (response.error) {
               // something went wrong
-              console.log("Error:", data.message)
+              console.log("Error:", response.message)
             } else {
               // something else
-              console.log("Token:", data.data.token.token)
+              console.log("Token:", response.data.token.token)
+              store.token = response.data.token.token
             }
           })
     }

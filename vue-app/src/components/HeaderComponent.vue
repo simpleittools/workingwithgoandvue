@@ -11,7 +11,8 @@
             <router-link class="nav-link active" aria-current="page" :to="{ name: 'Home' }">Home</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" :to="{name: 'Login'}">Login</router-link>
+            <router-link v-if="store.token == ''" class="nav-link" :to="{name: 'Login'}">Login</router-link>
+            <router-link v-else class="nav-link" :to="{name: 'Login'}">Log Out</router-link>
           </li>
         </ul>
       </div>
@@ -20,8 +21,14 @@
 </template>
 
 <script>
+import { store } from "@/components/store";
 export default {
-  name: "HeaderComponent"
+  name: "HeaderComponent",
+  data() {
+    return {
+      store
+    }
+  }
 }
 </script>
 
