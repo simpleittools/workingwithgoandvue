@@ -32,8 +32,25 @@ export default {
   },
   methods: {
     logout() {
-      store.token = "";
-      router.push({name: 'Login'})
+      const payload = {
+        token: store.token,
+      }
+
+      const requestOptions = {
+        method: "POST",
+        body: JSON.stringify(payload),
+      }
+
+      fetch("http://localhost:8081/users/logout", requestOptions)
+          .then((response) => response.json)
+          .then((response) => {
+            if (response.error) {
+              console.log(response.message)
+            } else {
+              store.token = "";
+              router.push({name: 'Login'})
+            }
+          })
     }
   }
 }
