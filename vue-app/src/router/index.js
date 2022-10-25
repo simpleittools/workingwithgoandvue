@@ -30,22 +30,22 @@ const routes = [
         component: Book
     },
     {
-        path: "admin/books",
+        path: "/admin/books",
         name: "BooksAdmin",
         component: BooksAdmin
     },
     {
-        path: "admin/books/:bookId",
+        path: "/admin/books/:bookId",
         name: "BookEdit",
         component: BookEdit
     },
     {
-        path: "admin/users",
+        path: "/admin/users",
         name: "Users",
         component: Users
     },
     {
-        path: "admin/users/:userId",
+        path: "/admin/users/:userId",
         name: "UserEdit",
         component: UserEdit
     },

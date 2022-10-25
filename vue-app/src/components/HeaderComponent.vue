@@ -11,6 +11,28 @@
             <router-link class="nav-link active" aria-current="page" :to="{ name: 'Home' }">Home</router-link>
           </li>
           <li class="nav-item">
+            <router-link class="nav-link" :to="{name: 'Books'}">Books</router-link>
+          </li>
+          <li class="nav-item dropdown" v-if="store.token !== ''">
+            <a href="#" class="nav-link dropdown-toggle" id="navBarDropDown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Admin</a>
+            <ul class="dropdown-menu" aria-labelledby="navBarDropDown">
+              <li>
+                <router-link class="dropdown-item" :to="{name: 'Users'}">Manage Users</router-link>
+              </li>
+              <li>
+                <router-link class="dropdown-item" :to="{name: 'UserEdit', params:{userId: 0} }">Add User</router-link>
+              </li>
+              <li>
+                <router-link class="dropdown-item" :to="{name: 'BooksAdmin'}">Manage Books</router-link>
+              </li>
+              <li>
+                <router-link class="dropdown-item" :to="{name: 'BookEdit', params:{bookId: 0} }">Add Book</router-link>
+              </li>
+            </ul>
+          </li>
+
+
+          <li class="nav-item">
             <router-link v-if="store.token === ''" class="nav-link" :to="{name: 'Login'}">Login</router-link>
             <span v-else class="nav-link" id="logout" @click="logout">Logout</span>
           </li>
