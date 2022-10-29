@@ -7,6 +7,7 @@ import BookEdit from "@/components/BookEdit";
 import BooksAdmin from "@/components/BooksAdmin";
 import Users from "@/components/Users";
 import UserEdit from "@/UserEdit";
+import Security from "@/components/security";
 
 const routes = [
     {
@@ -32,22 +33,26 @@ const routes = [
     {
         path: "/admin/books",
         name: "BooksAdmin",
-        component: BooksAdmin
+        component: BooksAdmin,
+        beforeEnter: Security.requireToken
     },
     {
         path: "/admin/books/:bookId",
         name: "BookEdit",
-        component: BookEdit
+        component: BookEdit,
+        beforeEnter: Security.requireToken
     },
     {
         path: "/admin/users",
         name: "Users",
-        component: Users
+        component: Users,
+        beforeEnter: Security.requireToken
     },
     {
         path: "/admin/users/:userId",
         name: "UserEdit",
-        component: UserEdit
+        component: UserEdit,
+        beforeEnter: Security.requireToken
     },
 
 ]

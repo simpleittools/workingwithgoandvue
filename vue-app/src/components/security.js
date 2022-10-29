@@ -1,7 +1,7 @@
 import {store} from "@/components/store";
 import router from "@/router";
 
-let security = {
+let Security = {
   // make sure user is authenticated
   requireToken: function() {
     if (store.token === "") {
