@@ -91,7 +91,8 @@ export default {
               + JSON.stringify(response.data)
               + "; "
               + expires
-              + "; path=/; SameSite=strict; Secure"
+                  // todo: "; secure" after strict
+              + "; path=/; SameSite=strict"
 
               router.push({name: 'Home'})
             }

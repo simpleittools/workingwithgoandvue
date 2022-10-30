@@ -73,7 +73,8 @@ export default {
             } else {
               store.token = "";
               store.user = {};
-              document.cookie = "_site_data=; Path=/; SameSite=Strict; Secure; Expires=Thu, 01 Jan 1970 00:00:01 GMT;"
+              // todo: "; secure;" after strict
+              document.cookie = "_site_data=; Path=/; SameSite=Strict; Expires=Thu, 01 Jan 1970 00:00:01 GMT;"
               router.push({name: 'Login'})
             }
           })

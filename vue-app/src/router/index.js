@@ -6,7 +6,7 @@ import Book from "@/components/Book";
 import BookEdit from "@/components/BookEdit";
 import BooksAdmin from "@/components/BooksAdmin";
 import Users from "@/components/Users";
-import UserEdit from "@/UserEdit";
+import UserEdit from "@/components/UserEdit";
 import Security from "@/components/security";
 
 const routes = [
