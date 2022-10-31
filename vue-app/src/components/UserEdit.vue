@@ -42,14 +42,14 @@
             v-else
             v-model="user.password"
             type="password"
-            required="false"
             label="Password"
             :value="user.password"
-            name="password">
+            name="password"
+            help="Leave empty to keep existing password">
           </TextInput>
           <hr>
           <div class="float-start">
-            <input type="submit" class="btn btn-primary me-2" value="save">
+            <input type="submit" class="btn btn-primary me-2" value="Save">
             <router-link :to="{name: 'Users'}" class="btn btn-outline-secondary">Cancel</router-link>
           </div>
           <div class="float-end">

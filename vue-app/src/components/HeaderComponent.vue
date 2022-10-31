@@ -20,7 +20,9 @@
                 <router-link class="dropdown-item" :to="{name: 'Users'}">Manage Users</router-link>
               </li>
               <li>
-                <router-link class="dropdown-item" :to="{name: 'UserEdit', params:{userId: 0} }">Add User</router-link>
+<!--                todo: fix this with info from https://www.udemy.com/course/working-with-vue-3-and-go/learn/lecture/30996692#questions/17844476 -->
+<!--                <router-link class="dropdown-item" :to="{name: 'UserEdit', params:{userId: 0} }">Add User</router-link>-->
+                <a class="dropdown-item" href="/admin/users/0">Add User</a>
               </li>
               <li>
                 <router-link class="dropdown-item" :to="{name: 'BooksAdmin'}">Manage Books</router-link>
