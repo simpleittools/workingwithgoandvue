@@ -48,7 +48,20 @@
             name="password">
           </TextInput>
           <hr>
-
+          <div class="float-start">
+            <input type="submit" class="btn btn-primary me-2" value="save">
+            <router-link :to="{name: 'Users'}" class="btn btn-outline-secondary">Cancel</router-link>
+          </div>
+          <div class="float-end">
+            <span
+                v-if="(this.$route.params.userId > 0
+                && (parseInt(String(this.$route.params.userId),
+                10) !== store.user.id))"
+                class="btn btn-danger"
+                @click="confirmDelete(this.user.id)"
+            >Delete</span>
+          </div>
+          <div class="clearfix"></div>
         </FormTag>
       </div>
     </div>
@@ -59,7 +72,10 @@
 import FormTag from "@/components/forms/FormTag";
 import TextInput from "@/components/forms/TextInput";
 import notie from 'notie'
-// import Security from "@/components/security";
+import Security from "@/components/security";
+
+import {store} from "@/components/store";
+
 export default {
   name: "UserEdit",
   components: {
@@ -80,11 +96,42 @@ export default {
         last_name: "",
         email: "",
         password: "",
-      }
+      },
+      store,
     }
   },
   methods: {
     submitHandler() {
+      const payload = {
+        id: parseInt(String(this.$route.params.userId),10),
+        first_name: this.user.first_name,
+        last_name: this.user.last_name,
+        email: this.user.email,
+        password: this.user.password,
+      }
+      fetch(`${process.env.VUE_APP_API_URL}/admin/users/save`, Security.requestOptions(payload))
+          .then((response)=>response.json())
+          .then((data) => {
+            if (data.error) {
+              notie.alert({
+                type: 'error',
+                text: data.message
+              })
+            } else {
+              notie.alert({
+                type: 'success',
+                text: "Changes Saved!",
+              })
+            }
+          })
+          .catch((error) => {
+            notie.alert({
+              type: 'error',
+              text: error,
+            })
+      })
+    },
+    confirmDelete(){
 
     }
   }
