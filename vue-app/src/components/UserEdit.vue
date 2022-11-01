@@ -4,7 +4,7 @@
       <div class="col">
         <h1 class="mt-3">User Edit</h1>
         <hr>
-        <FormTag @userEditEvent="submitHandler" name="userform" event="userEditEvent">
+        <FormTag @userEditEvent="submitHandler" name="userform" event="userEditEvent" v-if="this.ready">
           <TextInput
             v-model="user.first_name"
             type="text"
@@ -63,6 +63,7 @@
           </div>
           <div class="clearfix"></div>
         </FormTag>
+        <p v-else>Loading ...</p>
       </div>
     </div>
   </div>
@@ -92,10 +93,13 @@ export default {
               this.$emit('error', data.message)
             } else {
               this.user = data;
+              this.ready = true
               // we want password to be empty for existing users
               this.user.password = "";
             }
           })
+    } else {
+      this.ready = true
     }
   },
   data() {
@@ -108,6 +112,7 @@ export default {
         password: "",
       },
       store,
+      ready: false,
     }
   },
   methods: {
@@ -147,6 +152,7 @@ export default {
                 if (data.error) {
                   this.$emit('error', data.message)
                 } else {
+                  // todo: this undefined error, but the user does delete.
                   this.$emit('success', "User Deleted")
                   router.push({name: "Users"})
                 }
