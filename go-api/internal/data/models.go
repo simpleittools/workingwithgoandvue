@@ -39,6 +39,7 @@ type User struct {
 	FirstName string    `json:"first_name,omitempty"`
 	LastName  string    `json:"last_name,omitempty"`
 	Password  string    `json:"password"`
+	Active    int       `json:"active"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	Token     Token     `json:"token"`
@@ -50,17 +51,31 @@ func (u *User) GetAll() ([]*User, error) {
 
 	query := `
 		SELECT
-		    id, 
-		    email, 
-		    first_name, 
-		    last_name, 
-		    password, 
-		    created_at, 
-		    updated_at 
-		FROM 
-		    users 
-		ORDER BY 
-		    last_name`
+    		id,
+    		email,
+    		first_name,
+    		last_name,
+    		password,
+    		user_active,
+    		created_at,
+    		updated_at,
+    	CASE
+        	WHEN(
+            	SELECT COUNT(id)
+            	FROM
+                	tokens t
+            	WHERE
+                    user_id = users.id
+              	AND
+                    t.expiry > NOW()) > 0
+            THEN 1
+        	ELSE 0
+        	END AS has_token
+
+		FROM
+    		users
+		ORDER BY
+    		last_name`
 	rows, err := db.QueryContext(ctx, query)
 	if err != nil {
 		return nil, err
@@ -77,9 +92,10 @@ func (u *User) GetAll() ([]*User, error) {
 			&user.FirstName,
 			&user.LastName,
 			&user.Password,
+			&user.Active,
 			&user.CreatedAt,
 			&user.UpdatedAt,
-			//&user.Token,
+			&user.Token.ID,
 		)
 		if err != nil {
 			return nil, err
@@ -102,7 +118,8 @@ func (u *User) GetByEmail(email string) (*User, error) {
 		    email, 
 		    first_name, 
 		    last_name, 
-		    password, 
+		    password,
+		    user_active,
 		    created_at, 
 		    updated_at 
 		FROM 
@@ -119,6 +136,7 @@ func (u *User) GetByEmail(email string) (*User, error) {
 		&user.FirstName,
 		&user.LastName,
 		&user.Password,
+		&user.Active,
 		&user.CreatedAt,
 		&user.UpdatedAt,
 		//&user.Token,
@@ -140,7 +158,8 @@ func (u *User) GetOne(id int) (*User, error) {
 		    email, 
 		    first_name, 
 		    last_name, 
-		    password, 
+		    password,
+		    user_active,
 		    created_at, 
 		    updated_at 
 		FROM 
@@ -157,6 +176,7 @@ func (u *User) GetOne(id int) (*User, error) {
 		&user.FirstName,
 		&user.LastName,
 		&user.Password,
+		&user.Active,
 		&user.CreatedAt,
 		&user.UpdatedAt,
 		//&user.Token,
@@ -186,6 +206,7 @@ func (u *User) Insert(user User) (int, error) {
 		           first_name,
 		           last_name,
 		           password,
+		           user_active,
 		           created_at,
 		           updated_at
 		    )
@@ -195,7 +216,8 @@ func (u *User) Insert(user User) (int, error) {
 		        $3,
 		        $4,
 		        $5,
-		        $6
+		        $6,
+		        $7
 		)
 		RETURNING id`
 
@@ -204,6 +226,7 @@ func (u *User) Insert(user User) (int, error) {
 		user.FirstName,
 		user.LastName,
 		hashedPassword,
+		user.Active,
 		time.Now(),
 		time.Now(),
 	).Scan(&newID)
@@ -224,15 +247,17 @@ func (u *User) Update() error {
 		SET
 		    email = $1, 
 		    first_name = $2, 
-		    last_name = $3, 
-		    updated_at = $4
+		    last_name = $3,
+		    user_active = $4,
+		    updated_at = $5
 		WHERE 
-		    id = $5`
+		    id = $6`
 
 	_, err := db.ExecContext(ctx, stmt,
 		u.Email,
 		u.FirstName,
 		u.LastName,
+		u.Active,
 		time.Now(),
 		u.ID,
 	)
@@ -383,6 +408,7 @@ func (t *Token) GetUserForToken(token Token) (*User, error) {
 		    first_name, 
 		    last_name, 
 		    password, 
+		    user_active,
 		    created_at, 
 		    updated_at 
 		FROM 
@@ -399,6 +425,7 @@ func (t *Token) GetUserForToken(token Token) (*User, error) {
 		&user.FirstName,
 		&user.LastName,
 		&user.Password,
+		&user.Active,
 		&user.CreatedAt,
 		&user.UpdatedAt,
 		//&user.Token,
@@ -464,6 +491,9 @@ func (t *Token) AuthenticateToken(r *http.Request) (*User, error) {
 		return nil, errors.New("no matching user found")
 	}
 
+	if user.Active == 0 {
+		return nil, errors.New("user not active")
+	}
 	return user, nil
 
 }
