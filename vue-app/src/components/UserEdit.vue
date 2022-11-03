@@ -42,11 +42,19 @@
             v-else
             v-model="user.password"
             type="password"
-            required="false"
             label="Password"
             :value="user.password"
             name="password">
           </TextInput>
+
+          <div class="form-check">
+            <input type="radio" v-model="user.active" class="form-check-input" id="user-active" :value="1">
+            <label for="user-active" class="form-check-label">Active</label>
+          </div>
+          <div class="form-check">
+            <input type="radio" v-model="user.active" class="form-check-input" id="user-active-2" :value="0">
+            <label for="user-active-2" class="form-check-label">Inactive</label>
+          </div>
           <hr>
           <div class="float-start">
             <input type="submit" class="btn btn-primary me-2" value="save">
@@ -110,6 +118,7 @@ export default {
         last_name: "",
         email: "",
         password: "",
+        active: 0,
       },
       store,
       ready: false,
@@ -123,6 +132,7 @@ export default {
         last_name: this.user.last_name,
         email: this.user.email,
         password: this.user.password,
+        active: this.user.active,
       }
       fetch(`${process.env.VUE_APP_API_URL}/admin/users/save`, Security.requestOptions(payload))
           .then((response)=>response.json())
