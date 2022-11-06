@@ -58,6 +58,22 @@ export default {
           submitText: "Log Out",
           submitCallback: function () {
             console.log("Would log out user", id)
+            fetch(process.env.VUE_APP_API_URL + "/admin/log-user-out/" + id, Security.requestOptions(""))
+                .then((response) => response.json())
+                .then((data) => {
+                  if(data.error) {
+                    notie.alert({
+                      type: 'error',
+                      text: data.message,
+                    })
+                  } else {
+                    notie.alert({
+                      type: 'success',
+                      text: data.message,
+                    })
+                  }
+                })
+
           }
         })
       } else {
