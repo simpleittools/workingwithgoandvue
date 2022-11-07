@@ -19,18 +19,27 @@ const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 var db *sql.DB
 
+// New is the function used to create an instance of the data package. It returns the type
+// Model, which embeds all of the types we ant to be available to our application
 func New(dbPool *sql.DB) Models {
 	db = dbPool
 
 	return Models{
-		User:  User{},
-		Token: Token{},
+		User:   User{},
+		Token:  Token{},
+		Book:   Book{},
+		Author: Author{},
 	}
 }
 
+// Models is the type for this package. Note that any model that is included as a member
+// in this type is available to us throughout the application, anywhere that the
+// app variable is uxsed, provided that the model is also added in the New function.
 type Models struct {
-	User  User
-	Token Token
+	User   User
+	Token  Token
+	Book   Book
+	Author Author
 }
 
 type User struct {

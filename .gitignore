@@ -26,3 +26,4 @@ db-data
 db.data
 
 *.exe
+go-api/static/covers/*.jpg

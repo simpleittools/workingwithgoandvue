@@ -21,6 +21,8 @@ func (app *application) routes() http.Handler {
 
 	mux.Post("/users/login", app.Login)
 	mux.Post("/users/logout", app.Logout)
+	mux.Get("/books", app.AllBooks)
+	mux.Post("/books", app.AllBooks)
 	mux.Route("/admin", func(mux chi.Router) {
 		mux.Use(app.AuthTokenMiddleware)
 		mux.Post("/users", app.AllUsers)
@@ -30,6 +32,11 @@ func (app *application) routes() http.Handler {
 		mux.Post("/log-user-out/{id}", app.LogUserOutAndSetInactive)
 	})
 	mux.Post("/validate-token", app.ValidateToken)
+
+	// static files
+	// this allows us to have files that will change and be updated but are not built into the vue app.
+	fileServer := http.FileServer(http.Dir("./static/"))
+	mux.Handle("/static/*", http.StripPrefix("/static", fileServer))
 
 	return mux
 }
