@@ -5,6 +5,16 @@
         <h1 class="mt-3">All Books</h1>
       </div>
       <hr>
+      <div class="filters text-center mb-3">
+        <span class="filter me-1" :class="{active: currentFilter === 0}" @click="setFilter(0)">ALL</span>
+        <span class="filter me-1" :class="{active: currentFilter === 2}" @click="setFilter(2)">FANTASY</span>
+        <span class="filter me-1" :class="{active: currentFilter === 7}" @click="setFilter(3)">ROMANCE</span>
+        <span class="filter me-1" :class="{active: currentFilter === 6}" @click="setFilter(6)">HORROR</span>
+        <span class="filter me-1" :class="{active: currentFilter === 4}" @click="setFilter(4)">THRILLER</span>
+        <span class="filter me-1" :class="{active: currentFilter === 1}" @click="setFilter(1)">SCIENCE FICTION</span>
+        <span class="filter me-1" :class="{active: currentFilter === 5}" @click="setFilter(5)">MYSTERY</span>
+      </div>
+      <hr>
       <div>
         <div class="card-group">
           <div class="p-3 d-flex flex-wrap">
@@ -14,7 +24,10 @@
                 <img :src="`${this.imgPath}/covers/${b.slug}.jpg`" class="card-img-top" :alt="`cover for ${b.title}`">
                 <div class="card-body text-center">
                   <h6 class="card-title">{{b.title}}</h6>
-                  {{b.author.author_name}}
+                  <span class="book-author">{{b.author.author_name}}</span><br>
+                  <small class="text-muted book-genre" v-for="(g, index) in b.genres" :key="g.id">
+                    <em class="me-1">{{g.genre_name}}<template v-if="index !== (b.genres.length -1)">,</template></em>
+                  </small>
                 </div>
               </div>
             </div>
@@ -55,11 +68,31 @@ export default {
         })
   },
   methods: {
-
+    setFilter: function(filter) {
+      this.currentFilter = filter;
+    }
   }
 }
 </script>
 
 <style scoped>
+.book-author, .book-genre {
+  font-size: 0.8em;
+}
 
+.filter {
+  padding: 6px 6px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.35s;
+  border: 1px solid silver;
+}
+
+.filter.active {
+  background: lightgreen;
+}
+
+.filter:hover{
+  background: lightgray;
+}
 </style>
