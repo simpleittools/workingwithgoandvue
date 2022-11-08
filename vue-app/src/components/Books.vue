@@ -5,7 +5,7 @@
         <h1 class="mt-3">All Books</h1>
       </div>
       <hr>
-      <div class="filters text-center mb-3">
+      <div class="filters text-center">
         <span class="filter me-1" :class="{active: currentFilter === 0}" @click="setFilter(0)">ALL</span>
         <span class="filter me-1" :class="{active: currentFilter === 2}" @click="setFilter(2)">FANTASY</span>
         <span class="filter me-1" :class="{active: currentFilter === 7}" @click="setFilter(3)">ROMANCE</span>
@@ -17,7 +17,7 @@
       <hr>
       <div>
         <div class="card-group">
-          <div class="p-3 d-flex flex-wrap">
+          <transition-group class="p-3 d-flex flex-wrap" tag="div" apppear name="books">
             <div v-for="b in this.books" :key="b.id">
               <div class="card me-2 ms-1 mb-3" style="width: 10rem;"
                    v-if="b.genre_ids.includes(currentFilter) || currentFilter === 0">
@@ -31,7 +31,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </transition-group>
         </div>
       </div>
     </div>
@@ -88,6 +88,10 @@ export default {
   border: 1px solid silver;
 }
 
+.filters {
+  height: 2.5em;
+}
+
 .filter.active {
   background: lightgreen;
 }
@@ -95,4 +99,22 @@ export default {
 .filter:hover{
   background: lightgray;
 }
+
+/* Transition Styles */
+.books-move {
+  transition: all 500ms ease-in-out 50ms;
+}
+
+.books-enter-active {
+  transition: all 500ms ease-in-out;
+}
+
+.books-leave-active {
+  transition: all 500ms ease-in;
+}
+
+.books-enter, .books-leave-to {
+  opacity: 0;
+}
+
 </style>
