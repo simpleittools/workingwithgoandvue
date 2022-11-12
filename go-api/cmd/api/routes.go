@@ -23,6 +23,7 @@ func (app *application) routes() http.Handler {
 	mux.Post("/users/logout", app.Logout)
 	mux.Get("/books", app.AllBooks)
 	mux.Post("/books", app.AllBooks)
+	mux.Get("/books/{slug}", app.OneBook)
 	mux.Route("/admin", func(mux chi.Router) {
 		mux.Use(app.AuthTokenMiddleware)
 		mux.Post("/users", app.AllUsers)
