@@ -82,7 +82,8 @@ import FormTag from "@/components/forms/FormTag";
 import Security from "@/components/security";
 import TextInput from "@/components/forms/TextInput";
 import SelectInput from "@/components/forms/SelectInput";
-import notie  from 'notie';
+import notie from 'notie';
+import router from "@/router";
 
 export default {
   name: "BookEdit",
@@ -115,13 +116,71 @@ export default {
   },
   methods: {
     submitHandler(){
+      const payload = {
+        id: this.book.id,
+        title: this.book.title,
+        author_id: parseInt(this.book.author_id, 10),
+        publication_year: this.book.publication_year,
+        description: this.book.description,
+        cover: this.book.cover,
+        slug: this.book.slug,
+        genre_ids: this.book.genre_ids,
+      }
+
+      fetch(process.env.VUE_APP_API_URL +"/admin/books/save", Security.requestOptions(payload))
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.error) {
+              this.$emit('error', data.message)
+            } else {
+              this.$emit('success', "changes saved")
+              router.push({name: 'BooksAdmin'})
+            }
+          })
+          .catch(error => {
+            this.$emit('error', error)
+          })
 
     },
     loadCoverImage() {
+      // get reference to input using ref
+      const file = this.$refs.coverInput.files[0]
+
+      // encode the file using the FileReader API
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        const base64String = reader.result
+            .replace("data:", "")
+            .replace(/^.+,/, "")
+        this.book.cover = base64String
+        // alert(base64String)
+      }
+      reader.readAsDataURL(file)
 
     },
     confirmDelete(id) {
-      console.log(id)
+      notie.confirm({
+        test: "Are you sure you want to delete this book?",
+        submitText: "Delete",
+        submitCallback: () => {
+          let payload = {
+            id: id,
+          }
+          fetch(process.env.VUE_APP_API_URL +"/admin/books/delete", Security.requestOptions(payload))
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.error) {
+                  this.$emit('error', data.message)
+                } else {
+                  this.$emit('success', "Book Deleted")
+                  router.push({name: 'BooksAdmin'})
+                }
+              })
+              .catch(error => {
+                this.$emit('error', error)
+              })
+        }
+      })
     }
   }
 }
