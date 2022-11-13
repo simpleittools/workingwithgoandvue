@@ -40,11 +40,38 @@
               :value="book.publication_year"
               name="publication-year"
           ></TextInput>
-
           <div class="mb-3">
             <label for="description" class="form-label">Description</label>
             <textarea required v-model="book.description" class="form-control" id="description" rows="3"></textarea>
           </div>
+          <div class="mb-3">
+            <label for="genres" class="form-label">Genres</label>
+            <select ref="genres"
+                    class="form-select"
+                    name="genres"
+                    id="genres"
+                    required
+                    size="7"
+                    v-model="this.book.genre_ids"
+                    multiple
+            >
+              <option v-for="g in this.genres" :value="g.value" :key="g.value">
+                {{g.text}}
+              </option>
+            </select>
+          </div>
+          <hr>
+          <div class="float-start">
+            <input type="submit" class="btn btn-primary me-2" value="Save">
+            <router-link :to="{name: 'BooksAdmin'}" class="btn btn-outline-secondary">Cancel</router-link>
+          </div>
+          <div class="float-end">
+            <span v-if="this.book.id>0"
+                  class="btn btn-danger clickable"
+                  @click="confirmDelete(this.book.id)"
+            >Delete</span>
+          </div>
+
         </FormTag>
       </div>
     </div>
@@ -92,6 +119,9 @@ export default {
     },
     loadCoverImage() {
 
+    },
+    confirmDelete(id) {
+      console.log(id)
     }
   }
 }
