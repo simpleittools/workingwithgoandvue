@@ -88,6 +88,30 @@ import router from "@/router";
 export default {
   name: "BookEdit",
   components: {TextInput, FormTag, SelectInput},
+  beforeMount() {
+    //get book for edit if id >0
+    if (this.$route.params.bookId > 0) {
+
+    } else {
+
+    }
+
+    // get list of authors for drop down
+    fetch(process.env.VUE_APP_API_URL +"/admin/authors/all", Security.requestOptions(""))
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.error) {
+            this.$emit('error', data.message)
+          } else {
+            this.authors = data.data
+          }
+        })
+        .catch(error => {
+          this.$emit('error', error)
+        })
+
+
+  },
   data() {
     return {
       book: {
