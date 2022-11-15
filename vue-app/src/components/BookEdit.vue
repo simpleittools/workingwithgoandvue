@@ -7,7 +7,7 @@
         <h1 class="mt-3">Add/Edit Book</h1>
         <hr>
         <FormTag @bookEditEvent="submitHandler" name="bookForm" event="bookEditEvent">
-          <div v-if="this.book.slug !=''" class="mb-3">
+          <div v-if="this.book.slug !==''" class="mb-3">
             <img :src="`${this.imgPath}/covers/${this.book.slug}.jpg`" class="img-fluid img-thumbnail book-cover" alt="Book Cover">
           </div>
           <div class="mb-3">
@@ -34,7 +34,7 @@
           ></SelectInput>
           <TextInput
               v-model="book.publication_year"
-              type="text"
+              type="number"
               required="true"
               label="Publication Year"
               :value="book.publication_year"
@@ -71,6 +71,7 @@
                   @click="confirmDelete(this.book.id)"
             >Delete</span>
           </div>
+          <div class="clearfix"></div>
 
         </FormTag>
       </div>
@@ -91,9 +92,23 @@ export default {
   beforeMount() {
     //get book for edit if id >0
     if (this.$route.params.bookId > 0) {
-
-    } else {
-
+      fetch(process.env.VUE_APP_API_URL +"/admin/books/" + this.$route.params.bookId, Security.requestOptions(""))
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.error) {
+              this.$emit('error', data.message)
+            } else {
+              this.book = data.data
+              let genreArray = [];
+              for (let i = 0; i < this.book.genres.length; i++) {
+                genreArray.push(this.book.genres[i].id)
+              }
+              this.book.genre_ids = genreArray
+            }
+          })
+          .catch(error => {
+            this.$emit('error', error)
+          })
     }
 
     // get list of authors for drop down
@@ -118,7 +133,7 @@ export default {
         id: 0,
         title: "",
         author_id: 0,
-        publication_year: 0,
+        publication_year: null,
         description: "",
         cover: "",
         slug: "",
@@ -144,7 +159,7 @@ export default {
         id: this.book.id,
         title: this.book.title,
         author_id: parseInt(this.book.author_id, 10),
-        publication_year: this.book.publication_year,
+        publication_year: parseInt(this.book.publication_year, 10),
         description: this.book.description,
         cover: this.book.cover,
         slug: this.book.slug,
@@ -184,7 +199,7 @@ export default {
     },
     confirmDelete(id) {
       notie.confirm({
-        test: "Are you sure you want to delete this book?",
+        text: "Are you sure you want to delete this book?",
         submitText: "Delete",
         submitCallback: () => {
           let payload = {
@@ -211,6 +226,8 @@ export default {
 </script>
 
 <style scoped>
-
+.book-cover {
+  max-width: 10em;
+}
 
 </style>
